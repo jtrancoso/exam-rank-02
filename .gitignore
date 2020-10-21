@@ -1,1 +1,6 @@
 a.out
+inter/*.out
+union/*.out
+get_next_line/*.out
+ft_printf/*.out
+.DS_Store
