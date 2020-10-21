@@ -1,202 +1,126 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: juanrodr <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/08/03 09:44:50 by juanrodr          #+#    #+#             */
+/*   Updated: 2020/08/13 13:07:02 by juanrodr         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "get_next_line.h"
 
-typedef struct	s_str
+int		ft_strlen(char *str)						/////***************StrLen basico***************/////
 {
-	char			*content;
-	struct s_str	*next;
-}				t_str;
+	int 	count = 0;
 
-static int
-	ft_strlen(char const *str)
-{
-	int	i;
-
-	i = 0;
-	while (str[i])
-		i++;
-	return (i);
+	while (str[count] != '\0')
+		count++;
+	return (count);
 }
 
-static char
-	*ft_strdup(char const *str)
+char		*ft_strchr(char *str, int ch_find)		/////***************StrChr basico***************/////
 {
-	char	*cpy;
-	int		i;
+	int		count = 0;
 
-	if (!str)
+	if (str == NULL)										//Comprobación o segmentation fault primera iteracion
 		return (NULL);
-	if (!(cpy = (char*)malloc(sizeof(*cpy) * (ft_strlen(str) + 1))))
-		return (NULL);
-	i = 0;
-	while (str[i])
+	while (str[count] != '\0')								//Recorremos hasta encontrar caracter deseado
 	{
-		cpy[i] = str[i];
-		i++;
+		if (str[count] == ch_find)
+			return (str + count);
+		count++;
 	}
-	cpy[i] = 0;
-	return (cpy);
+	return (NULL);
 }
 
-static int
-	ft_strchr(char const *str, char c)
+char		*ft_strdup(char *str)						/////***************StrDup básico***************/////
 {
-	int	i;
+	int 	count = 0;
+	char	*ret;
 
-	i = 0;
-	while (str[i])
-		if (str[i++] == c)
-			return (1);
-	return (0);
+	if ((ret = (char *)malloc(sizeof(char) * ft_strlen(str) + 1)) == NULL)		//Alocamos tamaño + 1
+		return (NULL);
+	while (str[count] != '\0')								//Recorremos todo guardando
+	{
+		ret[count] = str[count];
+		count++;
+	}
+	ret[count] = '\0';										//Guardamos el \0
+	return (ret);
 }
 
-static t_str
-	*str_add(t_str **str, char *content)
+char		*ft_strjoin(char *s1, char *s2)		/////***************StrJoin basico***************/////
 {
-	t_str	*new;
-	t_str	*tmp;
+	char	*ret;
+	int 	count = 0;
 
-	if (!content)
+	if (s1 == NULL || s2 == NULL)							//Comprobamos nulos
 		return (NULL);
-	if (!(new = (t_str*)malloc(sizeof(*new))))
-		return (NULL);
-	new->content = content;
-	new->next = NULL;
-	if (!*str)
-		*str = new;
+	if ((ret = (char *)malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2)) + 1)) == NULL)
+		return (NULL);										//Alocamos tamaño de ambos + 1
+	while (*s1)										//Alcamos primera
+	{
+		ret[count] = *s1;
+		++count && ++s1;
+	}
+	while (*s2)										//Alocamos segunda detras de la primera
+	{
+		ret[count] = *s2;
+		++count && ++s2;
+    }
+	ret[count] = '\0';										//Guardamos el \0
+	return (ret);
+}
+
+int			get_next_line(char **line)						/////***************Creamos Func Principal***************/////
+{
+	static char	*mem;				//Para almacenar lo leido
+	char		buffer[257];	    //Para leer
+	char		*tmp, *aux1, *aux2;	//Para pasar el join antes de mem y para separar mem hasta el \n luego
+	int			b_read;				//Para calcular bytes leidos
+
+	if (!line)
+		return (-1);
+	while (ft_strchr(mem, '\n') == NULL)	//Mientras que no este \n avanzamos guardandolo y vemos si \n de la anterior iteracion
+	{
+		b_read = read(0, buffer, 256);			//Guardamos 0-256 caracteres a buffer de std_imput y en ret el n leido
+		if (b_read < 0)						//Comprobacion si da error read
+			return (-1);					//Devolver error (-1)
+		if (b_read == 0)						//Cero bytes leidos
+			break ;
+		buffer[b_read] = '\0';					//Guardamos 0 de fin de read
+		if (!mem)							//Si nada guardado de antes guardamos buffer
+			mem = ft_strdup(buffer);
+		else								//Si ya guardado algo
+		{
+			tmp = ft_strjoin(mem, buffer);	//Unimos en tmp buffer con lo guardado
+			free(mem);						//Liberamos
+			mem = tmp;						//Podemos guardar
+		}
+	}						/////***************EN ESTE PUNTO LINEA GUARDA EN MEM***************/////
+							/////***************SOLO QUEDA STRDUP EN LINE DE MEM***************/////
+	if (!mem && !b_read)
+	{
+		*line = ft_strdup("");				//Guardamos un \0, no hemos leido nada
+		return (0);							//Devolver lectura completada (0)
+	}
+	else if ((aux1 = ft_strchr(mem, '\n')))	//Comprobamos si queda guardado algun \n en mem
+	{
+		*aux1 = 0;							//Para que al hacer el strdup pare en donde este el \n
+		*line = ft_strdup(mem);				//Guardarmos en line la linea
+		aux2 = ft_strdup(++aux1);			//Para la siguiente iteracion guardamos lo siguiente al antiguo \n, actual \0
+		free(mem);							//Liberamos
+		mem = aux2;							//Guardamos en mem lo sobrante
+	}
 	else
 	{
-		tmp = *str;
-		while ((*str)->next)
-			*str = (*str)->next;
-		(*str)->next = new;
-		*str = tmp;
+		*line = ft_strdup(mem);				//Guardamos todo lo que quede
+		free(mem);							//Liberamos
+		mem = NULL;							//Lo ponemos nulo
+		return (0);							//Devolvemos lectura completada (0)
 	}
-	return (new);
+	return (1);								//Fin de linea leida (1)
 }
-
-static int
-	str_strchr(t_str *str, char c)
-{
-	while (str)
-	{
-		if (ft_strchr(str->content, c))
-			return (1);
-		str = str->next;
-	}
-	return (0);
-}
-
-static int
-	str_length(t_str *str)
-{
-	int	total;
-	int	i;
-
-	total = 0;
-	while (str)
-	{
-		i = 0;
-		while (str->content[i] && str->content[i] != '\n')
-			i++;
-		total += i;
-		if (str->content[i] == '\n')
-			return (total);
-		str = str->next;
-	}
-	return (total);
-}
-
-static int
-	str_write(t_str **str, char **line)
-{
-	char	*ltmp;
-	t_str	*tmp;
-	int		length;
-	int		i, j;
-
-	length = str_length(*str);
-	if (!(ltmp = (char*)malloc(sizeof(*str) * (length + 1))))
-		return (0);
-	ltmp[length] = 0;
-	*line = ltmp;
-	j = 0;
-	while (*str)
-	{
-		i = 0;
-		while ((*str)->content[i] && (*str)->content[i] != '\n')
-			(*line)[j++] = (*str)->content[i++];
-		(*line)[j] = 0;
-		if ((*str)->content[i++] == '\n')
-		{
-			j = 0;
-			while ((*str)->content[i])
-				(*str)->content[j++] = (*str)->content[i++];
-			(*str)->content[j] = 0;
-			return (1);
-		}
-		else
-		{
-			tmp = (*str)->next;
-			free((*str)->content);
-			free(*str);
-			*str = tmp;
-		}
-	}
-	return (1);
-}
-
-static int
-	str_clear(t_str **str)
-{
-	t_str	*next;
-
-	while (*str)
-	{
-		next = (*str)->next;
-		free((*str)->content);
-		free(*str);
-		*str = next;
-	}
-	return (0);
-}
-
-static int
-	read_file(t_str **str)
-{
-	char	buffer[129];
-	int		r;
-	int		total;
-
-	total = 0;
-	while ((r = read(0, buffer, 128)) > 0)
-	{
-		buffer[r] = 0;
-		if (!str_add(str, ft_strdup(buffer)))
-			return (-1);
-		if (ft_strchr(buffer, '\n'))
-			return (1);
-	}
-	return (total > 0);
-}
-
-int
-	get_next_line(char **line)
-{
-	static t_str	*buffer = NULL;
-	int				read_ret;
-	
-	read_ret = 1;
-	if (!buffer || !str_strchr(buffer, '\n'))
-		read_ret = read_file(&buffer);
-	if (read_ret < 0)
-		return (str_clear(&buffer) | -1);
-	if (!str_write(&buffer, line))
-		return (str_clear(&buffer) | -1);
-	read_ret = 1;
-	if (!buffer || !str_strchr(buffer, '\n'))
-		read_ret = read_file(&buffer);
-	if (read_ret < 0)
-		return (str_clear(&buffer) | -1);
-	return (!!buffer);
-}
-

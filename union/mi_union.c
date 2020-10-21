@@ -1,33 +1,46 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   mi-inter.c                                         :+:      :+:    :+:   */
+/*   mi_union.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jtrancos <jtrancos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/10/19 12:51:06 by jtrancos          #+#    #+#             */
-/*   Updated: 2020/10/19 13:43:08 by jtrancos         ###   ########.fr       */
+/*   Created: 2020/10/20 11:38:22 by jtrancos          #+#    #+#             */
+/*   Updated: 2020/10/20 14:02:23 by jtrancos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
 #include <unistd.h>
+#include <stdio.h>
 #include <string.h>
 
-int main(int argc, char **argv)
+int main (int argc, char **argv)
 {
 	int i;
+	int j;
+	int aux[255];
 	if (argc == 3)
 	{
 		i = 0;
-		while(argv[1][i])
+		while (i < 255)
 		{
-			if (argv[1][i])
+			aux[i] = 0;
+			i++;
+		}
+		i = 1;
+		while (i < 3)
+		{
+			j = 0;
+			while (argv[i][j])
 			{
-				if (strchr (argv[2], argv[1][i]))
-					write(1, &argv[1][i], 1);
-				i++;
+				if (aux[(unsigned int)argv[i][j]] == 0)
+				{
+					aux[(unsigned int)argv[i][j]] = 1;
+					write(1, &argv[i][j], 1);
+				}
+				j++;
 			}
+			i++;
 		}
 	}
 	write(1, "\n", 1);
