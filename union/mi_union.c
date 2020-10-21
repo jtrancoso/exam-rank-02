@@ -6,33 +6,18 @@
 /*   By: jtrancos <jtrancos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/20 11:38:22 by jtrancos          #+#    #+#             */
-/*   Updated: 2020/10/21 13:29:59 by jtrancos         ###   ########.fr       */
+/*   Updated: 2020/10/21 19:44:51 by jtrancos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <unistd.h>
-#include <stdio.h>
-#include <string.h>
-
-char *ft_strchr(char *str, int c)
-{
-	char *aux;
-
-	aux = str;
-	while (*aux != c)
-	{
-		if (*aux == '\0')
-			return (NULL);
-		aux++;
-	}
-	return (aux);
-}
 
 int main (int argc, char **argv)
 {
 	int i;
 	int j;
 	int aux[255];
+
 	if (argc == 3)
 	{
 		i = 0;

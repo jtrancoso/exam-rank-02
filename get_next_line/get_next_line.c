@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juanrodr <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: jtrancos <jtrancos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/03 09:44:50 by juanrodr          #+#    #+#             */
-/*   Updated: 2020/08/13 13:07:02 by juanrodr         ###   ########.fr       */
+/*   Updated: 2020/10/21 20:27:06 by jtrancos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,12 +64,14 @@ char		*ft_strjoin(char *s1, char *s2)		/////***************StrJoin basico*******
 	while (*s1)										//Alcamos primera
 	{
 		ret[count] = *s1;
-		++count && ++s1;
+		++count;
+		++s1;
 	}
 	while (*s2)										//Alocamos segunda detras de la primera
 	{
 		ret[count] = *s2;
-		++count && ++s2;
+		++count;
+		++s2;
     }
 	ret[count] = '\0';										//Guardamos el \0
 	return (ret);

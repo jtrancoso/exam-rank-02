@@ -6,7 +6,7 @@
 /*   By: jtrancos <jtrancos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/21 13:30:38 by jtrancos          #+#    #+#             */
-/*   Updated: 2020/10/21 14:01:26 by jtrancos         ###   ########.fr       */
+/*   Updated: 2020/10/21 20:33:39 by jtrancos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ char *ft_strdup(char *str)
 	char *aux;
 	int i;
 
-	if(!(aux = malloc(sizeof(char) * (ft_strlen(str) + 1))))
+	if (!(aux = malloc(sizeof(char) * (ft_strlen(str) + 1))))
 		return (NULL);
 	i = 0;
 	while (str[i])
@@ -57,6 +57,7 @@ char *ft_strjoin(char *s1, char *s2)
 {
 	int i;
 	char *aux;
+
 	if (!s1 || !s2)
 		return (NULL);
 	aux = malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2)) + 1);
