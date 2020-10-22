@@ -1,6 +1,6 @@
 a.out
-inter/*.out
-union/*.out
-get_next_line/*.out
-ft_printf/*.out
+inter/a.out
+union/a.out
+get_next_line/a.out
+ft_printf/a.out
 .DS_Store

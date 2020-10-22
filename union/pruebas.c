@@ -1,8 +1,8 @@
 #include <unistd.h>
 
-int main(int argc, char **argv)
+int main (int argc, char **argv)
 {
-	int aux[255];
+	char aux[255];
 	int i;
 	int j;
 
@@ -18,12 +18,12 @@ int main(int argc, char **argv)
 		while (i < 3)
 		{
 			j = 0;
-			while(argv[i][j])
+			while (argv[i][j])
 			{
-				if (aux[(unsigned int) argv[i][j]] == 0)
+				if(aux[(unsigned int)argv[i][j]] == 0)
 				{
-					write(1, &argv[i][j], 1);
 					aux[(unsigned int)argv[i][j]] = 1;
+					write(1, &argv[i][j], 1);
 				}
 				j++;
 			}
