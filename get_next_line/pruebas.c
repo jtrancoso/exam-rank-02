@@ -1,47 +1,31 @@
 #include "get_next_line.h"
 
-int ft_strlen(char *str)
+int	ft_strlen(char *s)
 {
 	int i;
-
+	
 	i = 0;
-	while(str[i] != '\0')
-		i++;
-	return (i);
-}
-
-char *ft_strchr(char *str, int c)
-{
-	int i;
-	char *aux;
-
-	i = 0;
-	aux = str;
-	if (!aux)
-		return (NULL);
-	while (aux[i] != '\0')
+	while(*s)
 	{
-		if (aux[i] == c)
-			return (aux + i);
+		s++;
 		i++;
 	}
-	return (NULL);
+	return(i);
 }
 
-char *ft_strdup(char *str)
+char *ft_strchr(char *s, int c)
 {
 	char *aux;
-	int i;
 
-	if (!(aux = malloc(sizeof (char) * (ft_strlen(str) + 1))))
+	if (!s)
 		return (NULL);
-	i = 0;
-	while (str[i])
+	aux = s;
+	while (*aux != c)
 	{
-		aux[i] = str[i];
-		i++;
+		if (*aux == '\0')
+			return (NULL);
+		aux++;
 	}
-	aux[i] = '\0';
 	return (aux);
 }
 
@@ -50,12 +34,11 @@ char *ft_strjoin(char *s1, char *s2)
 	char *aux;
 	int i;
 
+	i = 0;
 	if (!s1 || !s2)
 		return (NULL);
-	aux = malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2)) + 1);
-	if (aux == NULL)
+	if (!(aux = malloc(sizeof(char *) * (ft_strlen(s1) + ft_strlen(s2) + 1))))
 		return (NULL);
-	i = 0;
 	while (*s1)
 	{
 		aux[i] = *s1;
@@ -72,27 +55,48 @@ char *ft_strjoin(char *s1, char *s2)
 	return (aux);
 }
 
+char *ft_strdup(char *s)
+{
+	char *aux;
+	int i;
+	int j;
+
+	if (!s)
+		return (NULL);
+	if (!(aux = malloc(sizeof(char *) * (ft_strlen(s) + 1))))
+		return (NULL);
+	i = 0;
+	j = 0;
+	while (s[i])
+	{
+		aux[j] = s[i];
+		i++;
+		j++;
+	}
+	aux[i] = '\0';
+	return (aux);
+}
+
+
 int get_next_line(char **line)
 {
 	static char *mem;
 	char buffer[256];
-	char *aux;
-	char *tmp1;
-	char *tmp2;
-	int  b_read;
+	char *aux, *s1, *s2;
+	int bread;
 
 	if (!line)
 		return (-1);
 	while (!(ft_strchr(mem, '\n')))
 	{
-		b_read = read(0, buffer, 255);
-		if (b_read < 0)
+		bread = read(0, buffer, 255);
+		if (bread < 0)
 			return (-1);
-		if (b_read == 0)
+		if (bread == 0)
 			break ;
-		buffer[b_read] = '\0';
+		buffer[bread] = '\0';
 		if (!mem)
-			mem = ft_strdup(buffer);
+			mem = ft_strdup(mem);
 		else
 		{
 			aux = ft_strjoin(mem, buffer);
@@ -100,25 +104,36 @@ int get_next_line(char **line)
 			mem = aux;
 		}
 	}
-	if (!mem && !b_read)
+	if (!mem && !bread)
 	{
 		*line = ft_strdup("");
-		return(0);
+		return (0);
 	}
-	else if ((tmp1 = ft_strchr(mem, '\n')))
+	else if ((s1 = ft_strchr(mem, '\0')))
 	{
-		*tmp1 = 0;
+		*s1 = 0;
 		*line = ft_strdup(mem);
-		tmp2 = ft_strdup(++tmp1);
-		free(mem);
-		mem = tmp2;
+		*s2 = ft_strdup(++s1);
+		free (mem);
+		mem = s2;
 	}
 	else
 	{
 		*line = ft_strdup(mem);
-		free (mem);
+		free(mem);
 		mem = NULL;
-		return (0);
 	}
 	return (1);
+	
 }
+
+/*int main (void)
+{
+	char s1[100] = "123";
+	char s2[100] = "los microfonos";
+	
+	printf("%s\n", ft_strjoin(s1, s2));
+	printf("%s\n", ft_strdup(s2));
+	printf("%d\n", ft_strlen(s1));
+	printf("%s\n", ft_strchr(s2, 'f'));
+}*/

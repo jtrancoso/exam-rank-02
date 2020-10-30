@@ -9,7 +9,7 @@ int main (int argc, char **argv)
 	if (argc == 3)
 	{
 		i = 0;
-		while (i < 255)
+		while (i < 256)
 		{
 			aux[i] = 0;
 			i++;
@@ -20,10 +20,10 @@ int main (int argc, char **argv)
 			j = 0;
 			while (argv[i][j])
 			{
-				if(aux[(unsigned int)argv[i][j]] == 0)
+				if (aux[(unsigned int)argv[i][j]] == 0)
 				{
-					aux[(unsigned int)argv[i][j]] = 1;
 					write(1, &argv[i][j], 1);
+					aux[(unsigned int)argv[i][j]] = 1;	
 				}
 				j++;
 			}
@@ -31,5 +31,4 @@ int main (int argc, char **argv)
 		}
 	}
 	write(1, "\n", 1);
-	return (0);
 }
